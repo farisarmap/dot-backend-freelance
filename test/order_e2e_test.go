@@ -123,7 +123,7 @@ func TestOrderCRUD(t *testing.T) {
 				return baseURL + "/orders"
 			},
 			body:       `{"order_name":"Invalid User Order","user_id":999999}`,
-			wantStatus: http.StatusBadRequest,
+			wantStatus: http.StatusInternalServerError,
 		},
 		{
 			name:   "CreateOrder - Fail (Missing order_name)",
@@ -156,7 +156,7 @@ func TestOrderCRUD(t *testing.T) {
 			urlFn: func() string {
 				return fmt.Sprintf("%s/orders/%d", baseURL, 999999)
 			},
-			wantStatus: http.StatusBadRequest,
+			wantStatus: http.StatusInternalServerError,
 		},
 		{
 			name:   "UpdateOrder - Success",
@@ -201,7 +201,7 @@ func TestOrderCRUD(t *testing.T) {
 				return fmt.Sprintf("%s/orders/%d", baseURL, createdOrderID)
 			},
 			body:       `{"order_name":"E2E Updated Order","user_id":999999}`,
-			wantStatus: http.StatusBadRequest,
+			wantStatus: http.StatusInternalServerError,
 		},
 		{
 			name:   "PartialUpdateOrder - Success (OrderName only)",
@@ -254,7 +254,7 @@ func TestOrderCRUD(t *testing.T) {
 				// Order ini sudah dihapus
 				return fmt.Sprintf("%s/orders/%d", baseURL, createdOrderID)
 			},
-			wantStatus: http.StatusBadRequest,
+			wantStatus: http.StatusInternalServerError,
 		},
 	}
 

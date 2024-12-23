@@ -3,6 +3,9 @@ SHELL := /bin/bash
 DB_CONFIG := config.json
 MIGRATION_DIR := migration
 
+test:
+ go test ./test/
+
 migrate-up:
 	@echo "==> Migrating up..."
 	go run cmd/migrate/main.go -config=$(DB_CONFIG) -dir=$(MIGRATION_DIR) up

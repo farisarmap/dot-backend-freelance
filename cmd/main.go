@@ -40,12 +40,12 @@ func main() {
 	userRepo := adapter.NewUserRepository(db)
 	orderRepo := adapter.NewOrderRepository(db)
 
-	userService := service.NewUserService(userRepo, orderRepo)
-	orderService := service.NewOrderService(orderRepo, userRepo)
-
 	cacheManager := adapter.NewRedisCache(redisClient, time.Duration(cfg.Redis.TTL)*time.Second)
 
-	userHandler := handler.NewUserHandler(userService, cacheManager)
+	userService := service.NewUserService(userRepo, orderRepo, cacheManager)
+	orderService := service.NewOrderService(orderRepo, userRepo, cacheManager)
+
+	userHandler := handler.NewUserHandler(userService)
 	orderHandler := handler.NewOrderHandler(orderService, cacheManager)
 
 	e := echo.New()

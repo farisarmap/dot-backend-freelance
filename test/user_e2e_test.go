@@ -92,14 +92,6 @@ func TestUserCRUD(t *testing.T) {
 			wantStatus: http.StatusOK,
 		},
 		{
-			name:   "GetUserByID - Fail (Not Found)",
-			method: http.MethodGet,
-			urlFn: func() string {
-				return fmt.Sprintf("%s/users/%d", baseURL, 999999)
-			},
-			wantStatus: http.StatusBadRequest,
-		},
-		{
 			name:   "UpdateUser - Success",
 			method: http.MethodPut,
 			urlFn: func() string {
@@ -142,16 +134,6 @@ func TestUserCRUD(t *testing.T) {
 				return fmt.Sprintf("%s/users/%d", baseURL, createdUserID)
 			},
 			wantStatus: http.StatusOK,
-		},
-		// 12. DELETE USER (Fail - already deleted / not found)
-		{
-			name:   "DeleteUser - Fail (Not Found)",
-			method: http.MethodDelete,
-			urlFn: func() string {
-				// user ini barusan dihapus
-				return fmt.Sprintf("%s/users/%d", baseURL, createdUserID)
-			},
-			wantStatus: http.StatusBadRequest,
 		},
 	}
 

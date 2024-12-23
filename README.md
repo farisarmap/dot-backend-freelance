@@ -17,9 +17,16 @@
       - [End-to-End (E2E) Testing](#end-to-end-e2e-testing)
   - [Struktur Proyek](#struktur-proyek)
   - [API Endpoints](#api-endpoints)
-    - [Setup App](#setup-app)
+    - [Deploy App](#deploy-app)
       - [Konfigurasi Environment Variables](#konfigurasi-environment-variables)
       - [Menjalankan Layanan dengan Docker Compose](#menjalankan-layanan-dengan-docker-compose)
+  - [Menjalankan Aplikasi di Local](#menjalankan-aplikasi-di-local)
+    - [Langkah-Langkah](#langkah-langkah)
+      - [1. Menjalankan Layanan Pendukung dengan Docker](#1-menjalankan-layanan-pendukung-dengan-docker)
+      - [Jalankan Layanan](#jalankan-layanan)
+      - [2. Menjalankan Migrasi Database](#2-menjalankan-migrasi-database)
+      - [3. Menjalankan Aplikasi](#3-menjalankan-aplikasi)
+      - [4. Test End to End](#4-test-end-to-end)
 
 ## Arsitektur dan Pola Desain
 
@@ -435,7 +442,7 @@ Proyek ini menyediakan berbagai endpoint API untuk mengelola pengguna dan pesana
 }
 ```
 
-### Setup App
+### Deploy App
 
 #### Konfigurasi Environment Variables
 
@@ -448,8 +455,6 @@ Proyek ini menyediakan berbagai endpoint API untuk mengelola pengguna dan pesana
 docker compose -f "docker-compose.yml" up -d --build 
 ```
 
-Perintah ini akan menarik image yang diperlukan dan menjalankan kontainer secara terpisah (detached mode).
-
 Mengakses Aplikasi
 Aplikasi akan berjalan di http://localhost:8080 atau sesuai dengan konfigurasi yang Anda tetapkan dalam docker-compose.yml.
 
@@ -461,6 +466,48 @@ docker-compose down
 
 Perintah ini akan menghentikan dan menghapus kontainer yang dijalankan oleh Docker Compose.
 
-markdown
+## Menjalankan Aplikasi di Local
+
+Panduan ini menjelaskan langkah-langkah untuk menjalankan aplikasi secara lokal menggunakan Docker untuk layanan pendukung, serta menjalankan migrasi database dan aplikasi utama.
+
+### Langkah-Langkah
+
+#### 1. Menjalankan Layanan Pendukung dengan Docker
+
+Aplikasi ini membutuhkan layanan **PostgreSQL** dan **Redis**. Pastikan Anda telah menginstal **Docker** di sistem Anda.
+
+#### Jalankan Layanan
+
+Gunakan perintah berikut untuk menjalankan PostgreSQL dan Redis:
+
+```bash
+docker compose  -f "docker-compose.yml" up -d --build postgres redis 
+```
+
+postgres: Layanan database PostgreSQL.
+redis: Layanan cache Redis.
+
+#### 2. Menjalankan Migrasi Database
+
+Setelah layanan database berjalan, lakukan migrasi database dengan perintah berikut:
+
+```bash
+make migrate-up
+```
+
+make migrate-up akan menjalankan migrasi schema database menggunakan file migrasi yang telah disiapkan.
 
 
+#### 3. Menjalankan Aplikasi
+
+Jalankan aplikasi utama menggunakan perintah berikut:
+
+```bash
+make run
+```
+
+#### 4. Test End to End
+
+```bash
+go test ./test/
+```

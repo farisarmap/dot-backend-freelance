@@ -29,7 +29,7 @@ func ResponseError(message string, data interface{}) Response {
 	}
 }
 
-func HandleError(c echo.Context, err error) error {
+func HandleError(c echo.Context, err error, code int) error {
 	if ve, ok := err.(validator.ValidationErrors); ok {
 		var fieldErrors []string
 		for _, fe := range ve {
@@ -39,5 +39,5 @@ func HandleError(c echo.Context, err error) error {
 		return c.JSON(http.StatusBadRequest, resp)
 	}
 	resp := ResponseError(err.Error(), nil)
-	return c.JSON(http.StatusBadRequest, resp)
+	return c.JSON(code, resp)
 }
